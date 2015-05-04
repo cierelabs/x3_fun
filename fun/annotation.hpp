@@ -1,23 +1,23 @@
 /*=============================================================================
-    Copyright (c) 2001-2014 Joel de Guzman
+    Copyright (c) 2001-2015 Joel de Guzman
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC8_ANNOTATION_HPP)
-#define BOOST_SPIRIT_X3_CALC8_ANNOTATION_HPP
+#if !defined(BOOST_SPIRIT_X3_FUN_ANNOTATION_HPP)
+#define BOOST_SPIRIT_X3_FUN_ANNOTATION_HPP
 
 #include <map>
 #include "ast.hpp"
 #include <boost/spirit/home/x3/support/utility/lambda_visitor.hpp>
 
-namespace client
+namespace fun
 {
     // tag used to get our error handler from the context
     struct error_handler_tag;
 }
 
-namespace client { namespace parser
+namespace fun { namespace parser
 {
     struct annotation_base
     {

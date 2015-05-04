@@ -4,15 +4,15 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC8_COMPILER_HPP)
-#define BOOST_SPIRIT_X3_CALC8_COMPILER_HPP
+#if !defined(BOOST_SPIRIT_X3_FUN_COMPILER_HPP)
+#define BOOST_SPIRIT_X3_FUN_COMPILER_HPP
 
 #include "ast.hpp"
 #include "error_handler.hpp"
 #include <vector>
 #include <map>
 
-namespace client { namespace code_gen
+namespace fun { namespace code_gen
 {
     ///////////////////////////////////////////////////////////////////////////
     //  The Program
@@ -53,7 +53,7 @@ namespace client { namespace code_gen
 
         template <typename ErrorHandler>
         compiler(
-            client::code_gen::program& program
+            fun::code_gen::program& program
           , ErrorHandler const& error_handler)
           : program(program)
           , error_handler(
@@ -72,7 +72,7 @@ namespace client { namespace code_gen
         bool operator()(ast::variable_declaration const& x) const;
         bool operator()(ast::statement_list const& x) const;
 
-        client::code_gen::program& program;
+        fun::code_gen::program& program;
         error_handler_type error_handler;
     };
 }}
