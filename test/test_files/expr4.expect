@@ -1,1 +1,4 @@
-(((123 + 456) / 10) + 5)
+In file <%.*?expr4.input%>, line 1:
+Error! Expecting: Expression here:
+123 + #$%^
+______^_

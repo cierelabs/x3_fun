@@ -43,7 +43,12 @@ namespace fun { namespace parser
             Iterator& first, Iterator const& last
           , Exception const& x, Context const& context)
         {
-            std::string message = "Error! Expecting: " + id_map[x.which()] + " here:";
+            std::string which = x.which();
+            auto iter = id_map.find(which);
+            if (iter != id_map.end())
+                which = iter->second;
+             
+            std::string message = "Error! Expecting: " + which + " here:";
             auto& error_handler = x3::get<error_handler_tag>(context).get();
             error_handler(x.where(), message);
             return x3::error_handler_result::fail;

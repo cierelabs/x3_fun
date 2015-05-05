@@ -1,0 +1,4 @@
+In file <%.*?expr5.input%>, line 1:
+Error! Expecting: Expression here:
+(123 + 456) * #$%^ + 9988
+______________^_
