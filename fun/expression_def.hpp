@@ -40,7 +40,7 @@ namespace fun { namespace parser
     multiplicative_expr_type const multiplicative_expr = "multiplicative_expr";
     unary_expr_type unary_expr = "unary_expr";
     primary_expr_type primary_expr = "primary_expr";
-    function_call_type function_call = "function_call";		
+    function_call_type function_call = "function_call";
 
     auto const additive_expr_def =
         multiplicative_expr
@@ -65,7 +65,7 @@ namespace fun { namespace parser
     auto function_call_def =
             identifier
         >>  '('
-        >   (expression % ',')
+        >   -(expression % ',')
         >   ')'
         ;
 

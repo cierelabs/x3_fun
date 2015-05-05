@@ -47,7 +47,7 @@ namespace fun { namespace parser
             auto iter = id_map.find(which);
             if (iter != id_map.end())
                 which = iter->second;
-             
+
             std::string message = "Error! Expecting: " + which + " here:";
             auto& error_handler = x3::get<error_handler_tag>(context).get();
             error_handler(x.where(), message);
