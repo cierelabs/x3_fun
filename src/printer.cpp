@@ -29,6 +29,7 @@ namespace fun { namespace ast { namespace
         void operator()(ast::operation const& ast) const;
         void operator()(ast::signed_ const& ast) const;
         void operator()(ast::expression const& ast) const;
+        void operator()(ast::function_call const& ast) const;
         void operator()(ast::assignment const& ast) const;
         void operator()(ast::variable_declaration const& ast) const;
         void operator()(ast::statement_list const& ast) const;
@@ -81,10 +82,25 @@ namespace fun { namespace ast { namespace
         if (ast.rest.size())
             out << '(';
         boost::apply_visitor(*this, ast.first);
-        for (ast::operation const& oper : ast.rest)
+        for (auto const& oper : ast.rest)
             (*this)(oper);
         if (ast.rest.size())
             out << ')';
+    }
+
+    void printer::operator()(ast::function_call const& ast) const
+    {
+        out << ast.name << '(';
+        bool first = true;
+        for (auto const& arg : ast.arguments)
+        {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            (*this)(arg);
+        }
+        out << ')';
     }
 
     void printer::operator()(ast::assignment const& ast) const

@@ -29,6 +29,12 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
+    fun::ast::function_call,
+    (std::string, name)
+    (std::list<fun::ast::expression>, arguments)
+)
+
+BOOST_FUSION_ADAPT_STRUCT(
     fun::ast::variable_declaration,
     (fun::ast::assignment, assign)
 )

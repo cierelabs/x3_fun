@@ -48,7 +48,11 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
     bool success = phrase_parse(iter, end, parser, space, ast);
 
     if (success)
+    {
+        if (iter != end)
+            return "Error! Expecting end of input here: " + std::string(iter, end) + '\n';
         fun::ast::print(out, ast);
+    }
 
     return out.str();
 };

@@ -27,17 +27,20 @@ namespace fun { namespace parser
     struct multiplicative_expr_class;
     struct unary_expr_class;
     struct primary_expr_class;
+    struct function_call_class;
 
     typedef x3::rule<additive_expr_class, ast::expression> additive_expr_type;
     typedef x3::rule<multiplicative_expr_class, ast::expression> multiplicative_expr_type;
     typedef x3::rule<unary_expr_class, ast::operand> unary_expr_type;
     typedef x3::rule<primary_expr_class, ast::operand> primary_expr_type;
+    typedef x3::rule<function_call_class, ast::function_call> function_call_type;
 
     expression_type const expression = "expression";
     additive_expr_type const additive_expr = "additive_expr";
     multiplicative_expr_type const multiplicative_expr = "multiplicative_expr";
     unary_expr_type unary_expr = "unary_expr";
     primary_expr_type primary_expr = "primary_expr";
+    function_call_type function_call = "function_call";		
 
     auto const additive_expr_def =
         multiplicative_expr
@@ -59,8 +62,16 @@ namespace fun { namespace parser
         |   (char_('+') > primary_expr)
         ;
 
+    auto function_call_def =
+            identifier
+        >>  '('
+        >   (expression % ',')
+        >   ')'
+        ;
+
     auto const primary_expr_def =
             uint_
+        |   function_call
         |   identifier
         |   '(' > expression > ')'
         ;
@@ -73,6 +84,7 @@ namespace fun { namespace parser
       , multiplicative_expr
       , unary_expr
       , primary_expr
+      , function_call
     );
 
     struct unary_expr_class : annotation_base {};

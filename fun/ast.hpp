@@ -22,6 +22,7 @@ namespace fun { namespace ast
     struct nil {};
     struct signed_;
     struct expression;
+    struct function_call;
 
     struct variable : x3::position_tagged
     {
@@ -36,6 +37,7 @@ namespace fun { namespace ast
           , variable
           , x3::forward_ast<signed_>
           , x3::forward_ast<expression>
+          , x3::forward_ast<function_call>
         >
     {
         using base_type::base_type;
@@ -58,6 +60,12 @@ namespace fun { namespace ast
     {
         operand first;
         std::list<operation> rest;
+    };
+
+    struct function_call : x3::position_tagged
+    {
+        std::string name;
+        std::list<expression> arguments;
     };
 
     struct assignment : x3::position_tagged
