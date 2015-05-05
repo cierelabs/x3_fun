@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <sstream>
 
 #include "../fun/ast.hpp"
 #include "../fun/expression.hpp"
@@ -18,6 +19,45 @@
 
 namespace fs = boost::filesystem;
 
+auto parse = [](std::string const& source, fs::path input_path)-> std::string
+{
+    std::stringstream out;
+
+    using fun::parser::iterator_type;
+    iterator_type iter(source.begin());
+    iterator_type end(source.end());
+
+    // Our AST
+    fun::ast::expression ast;
+
+    // Our error handler
+    using boost::spirit::x3::with;
+    using fun::parser::error_handler_type;
+    error_handler_type error_handler(iter, end, out, input_path.c_str()); // Our error handler
+
+    // Our parser
+    auto const parser =
+        // we pass our error handler to the parser so we can access
+        // it later on in our on_error and on_sucess handlers
+        with<fun::parser::error_handler_tag>(std::ref(error_handler))
+        [
+            fun::expression()
+        ];
+
+    using boost::spirit::x3::ascii::space;
+    bool success = phrase_parse(iter, end, parser, space, ast);
+
+    if (success)
+        fun::ast::print(out, ast);
+
+    return out.str();
+};
+
+auto compare = [](fs::path input_path, fs::path expect_path)
+{
+   test::compare(input_path, expect_path, parse);
+};
+
 int main(int argc, char* argv[])
 {
     if (argc < 1)
@@ -26,44 +66,6 @@ int main(int argc, char* argv[])
        return -1;
     }
 
-    auto processor = [](fs::path input_path, fs::path expect_path)
-    {
-//        test::compare(input_path, expect_path, [](auto const& s){ return s; });
-
-        std::cout << "=============================================" << std::endl;
-        std::cout << "Parsing: " << input_path << std::endl;
-        std::cout << "=============================================" << std::endl;
-        std::string source = test::load(input_path);
-
-        using fun::parser::iterator_type;
-        iterator_type iter(source.begin());
-        iterator_type end(source.end());
-
-        // Our AST
-        fun::ast::expression ast;
-
-        // Our error handler
-        using boost::spirit::x3::with;
-        using fun::parser::error_handler_type;
-        error_handler_type error_handler(iter, end, std::cerr); // Our error handler
-
-        // Our parser
-        auto const parser =
-            // we pass our error handler to the parser so we can access
-            // it later on in our on_error and on_sucess handlers
-            with<fun::parser::error_handler_tag>(std::ref(error_handler))
-            [
-                fun::expression()
-            ];
-
-        using boost::spirit::x3::ascii::space;
-        bool success = phrase_parse(iter, end, parser, space, ast);
-       
-        if (success)
-            fun::ast::print(std::cout, ast);
-
-    };
-
-    test::for_each_file(fs::path(argv[1]), processor);
+    test::for_each_file(fs::path(argv[1]), compare);
     return 0;
 }

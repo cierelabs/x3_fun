@@ -220,7 +220,7 @@ namespace test
       , char const* re_suffix
     )
     {
-        std::string output = f(load(input_path));
+        std::string output = f(load(input_path), input_path);
         std::string expected = load(expect_path);
 
         auto result = compare(output, expected);
