@@ -1,4 +1,4 @@
-In file <%.*?expr6.input%>, line 1:
+In file <%.*?bad_group.input%>, line 1:
 Error! Expecting: ')' here:
 (123 + 456 + 999] * 12345
 ________________^_

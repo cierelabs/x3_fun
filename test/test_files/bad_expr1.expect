@@ -1,4 +1,4 @@
-In file <%.*?expr4.input%>, line 1:
+In file <%.*?bad_expr1.input%>, line 1:
 Error! Expecting: Expression here:
 123 + #$%^
 ______^_
