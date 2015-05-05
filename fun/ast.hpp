@@ -34,7 +34,6 @@ namespace fun { namespace ast
         x3::variant<
             nil
           , unsigned int
-          , variable
           , x3::forward_ast<signed_>
           , x3::forward_ast<expression>
           , x3::forward_ast<function_call>

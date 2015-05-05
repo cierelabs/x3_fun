@@ -90,7 +90,9 @@ namespace fun { namespace ast { namespace
 
     void printer::operator()(ast::function_call const& ast) const
     {
-        out << ast.name << '(';
+        out << ast.name;
+        if (ast.arguments.size())
+            out << '(';
         bool first = true;
         for (auto const& arg : ast.arguments)
         {
@@ -100,7 +102,8 @@ namespace fun { namespace ast { namespace
                 out << ", ";
             (*this)(arg);
         }
-        out << ')';
+        if (ast.arguments.size())
+            out << ')';
     }
 
     void printer::operator()(ast::assignment const& ast) const

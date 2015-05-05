@@ -1,0 +1,4 @@
+In file <%.*?bad_nullary_function.input%>, line 1:
+Error! Expecting: Argument List here:
+foo()
+____^_

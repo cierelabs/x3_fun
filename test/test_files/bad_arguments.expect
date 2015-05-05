@@ -1,4 +1,4 @@
 In file <%.*?bad_arguments.input%>, line 1:
 Error! Expecting: ')' here:
-foo($%)
-____^_
+foo(123, $%)
+_______^_

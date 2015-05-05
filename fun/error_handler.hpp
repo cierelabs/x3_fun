@@ -36,6 +36,7 @@ namespace fun { namespace parser
             id_map["multiplicative_expr"] = "Expression";
             id_map["unary_expr"] = "Expression";
             id_map["primary_expr"] = "Expression";
+            id_map["argument_list"] = "Argument List";
         }
 
         template <typename Iterator, typename Exception, typename Context>
