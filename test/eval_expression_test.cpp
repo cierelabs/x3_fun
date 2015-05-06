@@ -8,6 +8,8 @@
 #include <iterator>
 #include <algorithm>
 #include <sstream>
+#include <iomanip>
+#include <cmath>
 
 #include "../fun/ast.hpp"
 #include "../fun/expression.hpp"
@@ -44,6 +46,15 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
             fun::expression()
         ];
 
+    // Our Interpreter
+    fun::ast::interpreter interp(error_handler);
+
+    // Add some functions:
+    interp.add_function("pi", []{ return M_PI; });
+    interp.add_function("sin", [](double x){ return std::sin(x); });
+    interp.add_function("cos", [](double x){ return std::cos(x); });
+
+    // Go forth and parse!
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);
 
@@ -51,13 +62,9 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
     {
         if (iter != end)
             return "Error! Expecting end of input here: " + std::string(iter, end) + '\n';
-        fun::ast::interpreter interp;
-       
-        // add some functions:
-        interp.add_function("sin", [](double x){ return std::sin(x); });
-        interp.add_function("cos", [](double x){ return std::sin(x); });
-       
-        out << interp.eval(ast) << std::endl;
+        double result = interp.eval(ast);
+        if (out.str().empty())
+            out << result << std::endl;
     }
 
     return out.str();

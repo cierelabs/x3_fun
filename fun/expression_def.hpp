@@ -92,6 +92,7 @@ namespace fun { namespace parser
 
     struct unary_expr_class : annotation_base {};
     struct primary_expr_class : annotation_base {};
+    struct function_call_class : annotation_base {};
     struct expression_class : error_handler_base {};
 }}
 

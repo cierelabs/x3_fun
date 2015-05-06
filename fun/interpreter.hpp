@@ -11,12 +11,25 @@
 #include <functional>
 #include <boost/mpl/int.hpp>
 #include "ast.hpp"
+#include "error_handler.hpp"
 
 namespace fun { namespace ast
 {
     class interpreter
     {
     public:
+
+        typedef std::function<
+            void(x3::position_tagged, std::string const&)>
+        error_handler_type;
+
+        template <typename ErrorHandler>
+        interpreter(ErrorHandler const& error_handler)
+            : error_handler(
+                [&](x3::position_tagged pos, std::string const& msg)
+                { error_handler(pos, msg); }
+            )
+        {}
 
         template <typename F>
         void add_function(std::string name, F f);
@@ -30,6 +43,8 @@ namespace fun { namespace ast
           , std::pair<std::function<double(double* args)>, std::size_t>
         >
         fmap;
+
+        error_handler_type error_handler;
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -37,6 +52,8 @@ namespace fun { namespace ast
     ///////////////////////////////////////////////////////////////////////////
     namespace detail
     {
+        std::size_t const max_arity = 5;
+
         template <typename T>
         struct arity : arity<decltype(&T::operator())> {};
 
@@ -72,6 +89,16 @@ namespace fun { namespace ast
                 return f(args[0], args[1], args[2]);
             }
 
+            double dispatch(double* args, boost::mpl::int_<4>) const
+            {
+                return f(args[0], args[1], args[2], args[3]);
+            }
+
+            double dispatch(double* args, boost::mpl::int_<5>) const
+            {
+                return f(args[0], args[1], args[2], args[3], args[4]);
+            }
+
             double operator()(double* args) const
             {
                 return dispatch(args, boost::mpl::int_<detail::arity<F>::value>());
@@ -84,6 +111,9 @@ namespace fun { namespace ast
     template <typename F>
     inline void interpreter::add_function(std::string name, F f)
     {
+        static_assert(detail::arity<F>::value <= detail::max_arity,
+            "Function F has too many arguments (maximum == 5).");
+
         std::function<double(double* args)> f_adapter = detail::adapter_function<F>(f);
         fmap[name] = std::make_pair(f_adapter, detail::arity<F>::value);
     }

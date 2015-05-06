@@ -1,0 +1,4 @@
+In file <%.*?undefined_fun.input%>, line 1:
+Undefined function foo_bar.
+foo_bar(123)
+~~~~~~~~~~~~ <<-- Here

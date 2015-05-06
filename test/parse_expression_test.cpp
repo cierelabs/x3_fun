@@ -44,6 +44,7 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
             fun::expression()
         ];
 
+    // Go forth and parse!
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);
 

@@ -1,0 +1,5 @@
+In file <%.*?wrong_arity.input%>, line 1:
+Wrong number of arguments to function sin (1 expected).
+
+sin(1, 2)
+~~~~~~~~~ <<-- Here

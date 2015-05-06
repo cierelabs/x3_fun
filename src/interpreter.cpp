@@ -9,23 +9,11 @@
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/assert.hpp>
 #include <iostream>
+#include <sstream>
 
 namespace fun { namespace ast { namespace
 {
-    template <typename T>
-    struct arity : arity<decltype(&T::operator())> {};
-
-    template <typename F, typename RT, typename ...Args>
-    struct arity<RT(F::*)(Args...) const>
-    {
-        std::size_t const arity = sizeof...(Args);
-    };
-
-    template <typename F, typename RT, typename ...Args>
-    struct arity<RT(F::*)(Args...)>
-    {
-        std::size_t const arity = sizeof...(Args);
-    };
+    typedef interpreter::error_handler_type error_handler_type;
 
     typedef
         std::map<
@@ -38,8 +26,10 @@ namespace fun { namespace ast { namespace
     {
         typedef double result_type;
 
-        evaluator(fmap_type const& fmap)
-            : fmap(fmap) {}
+        evaluator(fmap_type const& fmap, error_handler_type const& error_handler)
+            : fmap(fmap)
+            , error_handler(error_handler)
+        {}
 
         double operator()(ast::nil) const { BOOST_ASSERT(0); }
         double operator()(double ast) const;
@@ -49,6 +39,7 @@ namespace fun { namespace ast { namespace
         double operator()(ast::function_call const& ast) const;
 
         fmap_type const& fmap;
+        error_handler_type const& error_handler;
     };
 
     double evaluator::operator()(double ast) const
@@ -72,6 +63,7 @@ namespace fun { namespace ast { namespace
         }
     }
 
+    // INTERPRETER_SIGNED_VISIT_BEGIN
     double evaluator::operator()(ast::signed_ const& ast) const
     {
         double r = boost::apply_visitor(*this, ast.operand_);
@@ -85,6 +77,7 @@ namespace fun { namespace ast { namespace
                return 0;
         }
     }
+    // INTERPRETER_SIGNED_VISIT_END
 
     double evaluator::operator()(ast::expression const& ast) const
     {
@@ -99,16 +92,24 @@ namespace fun { namespace ast { namespace
         auto iter = fmap.find(ast.name);
 
         if (iter == fmap.end())
-            return 0; // $$$ for now $$$ error function not found
+        {
+            error_handler(ast, "Undefined function " + ast.name + '.');
+            return 0;
+        }
 
         if (iter->second.second != ast.arguments.size())
-            return 0; // $$$ for now $$$ error wrong arity
+        {
+            std::stringstream out;
+            out
+                << "Wrong number of arguments to function " << ast.name << " ("
+                << iter->second.second << " expected)." << std::endl;
 
-        if (ast.arguments.size() > 3)
-            return 0; // $$$ for now $$$ we support max arity of 3 only
+            error_handler(ast, out.str());
+            return 0;
+        }
 
         // Get the args
-        double args[3];
+        double args[detail::max_arity];
         double* p = args;
         for (auto const& arg : ast.arguments)
             *p++ = (*this)(arg);
@@ -122,6 +123,6 @@ namespace fun { namespace ast
 {
     float interpreter::eval(ast::expression const& ast)
     {
-        return evaluator(fmap)(ast);
+        return evaluator(fmap, error_handler)(ast);
     }
 }}
