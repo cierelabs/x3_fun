@@ -12,6 +12,8 @@
 
 namespace fun { namespace ast { namespace
 {
+    /* WIP...
+
     ////////////////////////////////////////////////////////////////////////////
     //  The AST interpreter
     ////////////////////////////////////////////////////////////////////////////
@@ -103,14 +105,12 @@ namespace fun { namespace ast { namespace
             out << ')';
     }
 }}}
-
+*/
 
 namespace fun { namespace ast
 {
-    void print(std::ostream& out, ast::expression const& ast)
+    float print(ast::expression const& ast)
     {
-        interpreter p(out);
-        p(ast);
-        out << std::endl;
+        return 0;
     }
 }}

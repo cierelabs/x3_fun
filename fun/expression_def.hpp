@@ -92,10 +92,7 @@ namespace fun { namespace parser
 
     struct unary_expr_class : annotation_base {};
     struct primary_expr_class : annotation_base {};
-
-#if defined(BOOST_SPIRIT_X3_FUN_TEST_EXPRESSION)
     struct expression_class : error_handler_base {};
-#endif
 }}
 
 namespace fun
