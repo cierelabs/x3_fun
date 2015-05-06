@@ -48,6 +48,7 @@ namespace fun { namespace ast { namespace
         }
     }
 
+    // INTERPRETER_SIGNED_VISIT_BEGIN
     double interpreter::operator()(ast::signed_ const& ast) const
     {
         double r = boost::apply_visitor(*this, ast.operand_);
@@ -61,6 +62,7 @@ namespace fun { namespace ast { namespace
                return 0;
         }
     }
+    // INTERPRETER_SIGNED_VISIT_END
 
     double interpreter::operator()(ast::expression const& ast) const
     {
