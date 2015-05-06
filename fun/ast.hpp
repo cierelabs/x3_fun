@@ -24,16 +24,10 @@ namespace fun { namespace ast
     struct expression;
     struct function_call;
 
-    struct variable : x3::position_tagged
-    {
-        variable(std::string const& name = "") : name(name) {}
-        std::string name;
-    };
-
     struct operand :
         x3::variant<
             nil
-          , unsigned int
+          , double
           , x3::forward_ast<signed_>
           , x3::forward_ast<expression>
           , x3::forward_ast<function_call>
@@ -72,11 +66,6 @@ namespace fun { namespace ast
     {
         out << "nil";
         return out;
-    }
-
-    inline std::ostream& operator<<(std::ostream& out, variable const& var)
-    {
-        out << var.name; return out;
     }
 }}
 

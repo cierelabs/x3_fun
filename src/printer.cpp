@@ -24,8 +24,7 @@ namespace fun { namespace ast { namespace
         {}
 
         void operator()(ast::nil) const { BOOST_ASSERT(0); }
-        void operator()(unsigned int ast) const;
-        void operator()(ast::variable const& ast) const;
+        void operator()(double ast) const;
         void operator()(ast::operation const& ast) const;
         void operator()(ast::signed_ const& ast) const;
         void operator()(ast::expression const& ast) const;
@@ -34,12 +33,7 @@ namespace fun { namespace ast { namespace
         std::ostream& out;
     };
 
-    void printer::operator()(unsigned int ast) const
-    {
-        out << ast;
-    }
-
-    void printer::operator()(ast::variable const& ast) const
+    void printer::operator()(double ast) const
     {
         out << ast;
     }

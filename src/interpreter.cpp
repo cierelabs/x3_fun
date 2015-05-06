@@ -12,105 +12,74 @@
 
 namespace fun { namespace ast { namespace
 {
-    /* WIP...
-
     ////////////////////////////////////////////////////////////////////////////
-    //  The AST interpreter
+    //  The interpreter
     ////////////////////////////////////////////////////////////////////////////
     struct interpreter
     {
-        typedef void result_type;
+        typedef double result_type;
 
-        interpreter(std::ostream& out)
-            : out(out)
-        {}
-
-        void operator()(ast::nil) const { BOOST_ASSERT(0); }
-        void operator()(unsigned int ast) const;
-        void operator()(ast::variable const& ast) const;
-        void operator()(ast::operation const& ast) const;
-        void operator()(ast::signed_ const& ast) const;
-        void operator()(ast::expression const& ast) const;
-        void operator()(ast::function_call const& ast) const;
-
-        std::ostream& out;
+        double operator()(ast::nil) const { BOOST_ASSERT(0); }
+        double operator()(double ast) const;
+        double operator()(double lhs, ast::operation const& ast) const;
+        double operator()(ast::signed_ const& ast) const;
+        double operator()(ast::expression const& ast) const;
+        double operator()(ast::function_call const& ast) const;
     };
 
-    void interpreter::operator()(unsigned int ast) const
+    double interpreter::operator()(double ast) const
     {
-        out << ast;
+        return ast;
     }
 
-    void interpreter::operator()(ast::variable const& ast) const
+    double interpreter::operator()(double lhs, ast::operation const& ast) const
     {
-        out << ast;
-    }
-
-    void interpreter::operator()(ast::operation const& ast) const
-    {
+        double rhs = boost::apply_visitor(*this, ast.operand_);
         switch (ast.operator_)
         {
-            case '+': out << " + "; break;
-            case '-': out << " - "; break;
-            case '*': out << " * "; break;
-            case '/': out << " / "; break;
+            case '+': return lhs + rhs;
+            case '-': return lhs - rhs;
+            case '*': return lhs * rhs;
+            case '/': return lhs / rhs;
 
             default:
                BOOST_ASSERT(0);
-               return;
+               return 0;
         }
-        boost::apply_visitor(*this, ast.operand_);
     }
 
-    void interpreter::operator()(ast::signed_ const& ast) const
+    double interpreter::operator()(ast::signed_ const& ast) const
     {
+        double r = boost::apply_visitor(*this, ast.operand_);
         switch (ast.sign)
         {
-            case '-': out << "- "; break;
-            case '+': break;
+            case '-': return -r;
+            case '+': return r;
 
             default:
                BOOST_ASSERT(0);
-               return;
+               return 0;
         }
-        boost::apply_visitor(*this, ast.operand_);
     }
 
-    void interpreter::operator()(ast::expression const& ast) const
+    double interpreter::operator()(ast::expression const& ast) const
     {
-        if (ast.rest.size())
-            out << '(';
-        boost::apply_visitor(*this, ast.first);
+        double r = boost::apply_visitor(*this, ast.first);
         for (auto const& oper : ast.rest)
-            (*this)(oper);
-        if (ast.rest.size())
-            out << ')';
+            r = (*this)(r, oper);
+         return r;
     }
 
-    void interpreter::operator()(ast::function_call const& ast) const
+    double interpreter::operator()(ast::function_call const& ast) const
     {
-        out << ast.name;
-        if (ast.arguments.size())
-            out << '(';
-        bool first = true;
-        for (auto const& arg : ast.arguments)
-        {
-            if (first)
-                first = false;
-            else
-                out << ", ";
-            (*this)(arg);
-        }
-        if (ast.arguments.size())
-            out << ')';
+        return 0; // $$$ for now $$$
     }
 }}}
-*/
 
 namespace fun { namespace ast
 {
-    float print(ast::expression const& ast)
+    float eval(ast::expression const& ast)
     {
-        return 0;
+        return interpreter()(ast);
     }
 }}

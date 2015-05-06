@@ -17,7 +17,7 @@
 
 namespace fun { namespace parser
 {
-    using x3::uint_;
+    using x3::double_;
     using x3::char_;
     using x3::raw;
     using x3::lexeme;
@@ -73,7 +73,7 @@ namespace fun { namespace parser
         ;
 
     auto const primary_expr_def =
-            uint_
+            double_
         |   function_call
         |   '(' > expression > ')'
         ;
