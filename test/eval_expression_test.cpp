@@ -51,7 +51,13 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
     {
         if (iter != end)
             return "Error! Expecting end of input here: " + std::string(iter, end) + '\n';
-        out << fun::ast::eval(ast) << std::endl;
+        fun::ast::interpreter interp;
+       
+        // add some functions:
+        interp.add_function("sin", [](double x){ return std::sin(x); });
+        interp.add_function("cos", [](double x){ return std::sin(x); });
+       
+        out << interp.eval(ast) << std::endl;
     }
 
     return out.str();
