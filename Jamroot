@@ -1,0 +1,35 @@
+#
+#   Copyright (C) 2012 - 2013 ciere consulting, ciere.com
+#   Copyright (C) 2010, 2011  Object Modeling Designs
+#
+#   Distributed under the Boost Software License, Version 1.0. (See accompanying
+#   file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import os ;
+
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+
+if $(BOOST_ROOT)
+{
+   use-project /boost : $(BOOST_ROOT) ;
+}
+
+project
+   : requirements
+      <toolset>gcc:<cxxflags>-ftemplate-depth=300
+      <toolset>gcc:<cxxflags>-std=c++14
+      <toolset>darwin:<cxxflags>-ftemplate-depth=300
+      <toolset>darwin:<cxxflags>-std=c++14
+      <toolset>clang:<cxxflags>-std=c++14
+      <define>BOOST_SPIRIT_USE_PHOENIX_V3=1
+      <use>/boost//headers
+      <include>.
+      <include>./fun
+   ;
+
+lib fun
+   : [ glob src/*.cpp ]
+   ;
+
+build-project test ;
