@@ -12,12 +12,34 @@
 
 namespace fun { namespace ast { namespace
 {
-    ////////////////////////////////////////////////////////////////////////////
-    //  The interpreter
-    ////////////////////////////////////////////////////////////////////////////
-    struct interpreter
+    template <typename T>
+    struct arity : arity<decltype(&T::operator())> {};
+
+    template <typename F, typename RT, typename ...Args>
+    struct arity<RT(F::*)(Args...) const>
+    {
+        std::size_t const arity = sizeof...(Args);
+    };
+
+    template <typename F, typename RT, typename ...Args>
+    struct arity<RT(F::*)(Args...)>
+    {
+        std::size_t const arity = sizeof...(Args);
+    };
+
+    typedef
+        std::map<
+            std::string
+          , std::pair<std::function<double(double* args)>, std::size_t>
+        >
+    fmap_type;
+
+    struct evaluator
     {
         typedef double result_type;
+
+        evaluator(fmap_type const& fmap)
+            : fmap(fmap) {}
 
         double operator()(ast::nil) const { BOOST_ASSERT(0); }
         double operator()(double ast) const;
@@ -25,14 +47,16 @@ namespace fun { namespace ast { namespace
         double operator()(ast::signed_ const& ast) const;
         double operator()(ast::expression const& ast) const;
         double operator()(ast::function_call const& ast) const;
+
+        fmap_type const& fmap;
     };
 
-    double interpreter::operator()(double ast) const
+    double evaluator::operator()(double ast) const
     {
         return ast;
     }
 
-    double interpreter::operator()(double lhs, ast::operation const& ast) const
+    double evaluator::operator()(double lhs, ast::operation const& ast) const
     {
         double rhs = boost::apply_visitor(*this, ast.operand_);
         switch (ast.operator_)
@@ -48,8 +72,7 @@ namespace fun { namespace ast { namespace
         }
     }
 
-    // INTERPRETER_SIGNED_VISIT_BEGIN
-    double interpreter::operator()(ast::signed_ const& ast) const
+    double evaluator::operator()(ast::signed_ const& ast) const
     {
         double r = boost::apply_visitor(*this, ast.operand_);
         switch (ast.sign)
@@ -62,9 +85,8 @@ namespace fun { namespace ast { namespace
                return 0;
         }
     }
-    // INTERPRETER_SIGNED_VISIT_END
 
-    double interpreter::operator()(ast::expression const& ast) const
+    double evaluator::operator()(ast::expression const& ast) const
     {
         double r = boost::apply_visitor(*this, ast.first);
         for (auto const& oper : ast.rest)
@@ -72,16 +94,34 @@ namespace fun { namespace ast { namespace
          return r;
     }
 
-    double interpreter::operator()(ast::function_call const& ast) const
+    double evaluator::operator()(ast::function_call const& ast) const
     {
-        return 0; // $$$ for now $$$
+        auto iter = fmap.find(ast.name);
+
+        if (iter == fmap.end())
+            return 0; // $$$ for now $$$ error function not found
+
+        if (iter->second.second != ast.arguments.size())
+            return 0; // $$$ for now $$$ error wrong arity
+
+        if (ast.arguments.size() > 3)
+            return 0; // $$$ for now $$$ we support max arity of 4 only
+
+        // Get the args
+        double args[3];
+        double* p = args;
+        for (auto const& arg : ast.arguments)
+            *p++ = (*this)(arg);
+
+        // call user function
+        return iter->second.first(args);
     }
 }}}
 
 namespace fun { namespace ast
 {
-    float eval(ast::expression const& ast)
+    float interpreter::eval(ast::expression const& ast)
     {
-        return interpreter()(ast);
+        return evaluator(fmap)(ast);
     }
 }}
