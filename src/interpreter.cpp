@@ -4,7 +4,7 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#include "../fun/printer.hpp"
+#include "../fun/interpreter.hpp"
 #include <boost/foreach.hpp>
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/assert.hpp>
@@ -13,13 +13,13 @@
 namespace fun { namespace ast { namespace
 {
     ////////////////////////////////////////////////////////////////////////////
-    //  The AST printer
+    //  The AST interpreter
     ////////////////////////////////////////////////////////////////////////////
-    struct printer
+    struct interpreter
     {
         typedef void result_type;
 
-        printer(std::ostream& out)
+        interpreter(std::ostream& out)
             : out(out)
         {}
 
@@ -34,17 +34,17 @@ namespace fun { namespace ast { namespace
         std::ostream& out;
     };
 
-    void printer::operator()(unsigned int ast) const
+    void interpreter::operator()(unsigned int ast) const
     {
         out << ast;
     }
 
-    void printer::operator()(ast::variable const& ast) const
+    void interpreter::operator()(ast::variable const& ast) const
     {
         out << ast;
     }
 
-    void printer::operator()(ast::operation const& ast) const
+    void interpreter::operator()(ast::operation const& ast) const
     {
         switch (ast.operator_)
         {
@@ -60,7 +60,7 @@ namespace fun { namespace ast { namespace
         boost::apply_visitor(*this, ast.operand_);
     }
 
-    void printer::operator()(ast::signed_ const& ast) const
+    void interpreter::operator()(ast::signed_ const& ast) const
     {
         switch (ast.sign)
         {
@@ -74,7 +74,7 @@ namespace fun { namespace ast { namespace
         boost::apply_visitor(*this, ast.operand_);
     }
 
-    void printer::operator()(ast::expression const& ast) const
+    void interpreter::operator()(ast::expression const& ast) const
     {
         if (ast.rest.size())
             out << '(';
@@ -85,7 +85,7 @@ namespace fun { namespace ast { namespace
             out << ')';
     }
 
-    void printer::operator()(ast::function_call const& ast) const
+    void interpreter::operator()(ast::function_call const& ast) const
     {
         out << ast.name;
         if (ast.arguments.size())
@@ -109,7 +109,7 @@ namespace fun { namespace ast
 {
     void print(std::ostream& out, ast::expression const& ast)
     {
-        printer p(out);
+        interpreter p(out);
         p(ast);
         out << std::endl;
     }

@@ -67,28 +67,6 @@ namespace fun { namespace ast
         std::list<expression> arguments;
     };
 
-    struct assignment : x3::position_tagged
-    {
-        variable lhs;
-        expression rhs;
-    };
-
-    struct variable_declaration
-    {
-        assignment assign;
-    };
-
-    struct statement :
-        x3::variant<
-            variable_declaration
-          , assignment>
-    {
-        using base_type::base_type;
-        using base_type::operator=;
-    };
-
-    typedef std::list<statement> statement_list;
-
     // print functions for debugging
     inline std::ostream& operator<<(std::ostream& out, nil)
     {

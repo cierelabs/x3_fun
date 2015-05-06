@@ -34,15 +34,4 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::list<fun::ast::expression>, arguments)
 )
 
-BOOST_FUSION_ADAPT_STRUCT(
-    fun::ast::variable_declaration,
-    (fun::ast::assignment, assign)
-)
-
-BOOST_FUSION_ADAPT_STRUCT(
-    fun::ast::assignment,
-    (fun::ast::variable, lhs)
-    (fun::ast::expression, rhs)
-)
-
 #endif
