@@ -20,8 +20,10 @@ project
 
 unit-test parse_expression_test
    : parse_expression_test.cpp
+   : <testing.arg>"parse_expression_test"
    ;
 
 unit-test eval_expression_test
    : eval_expression_test.cpp
+   : <testing.arg>"eval_expression_test"
    ;
