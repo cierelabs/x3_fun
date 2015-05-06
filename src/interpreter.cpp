@@ -105,7 +105,7 @@ namespace fun { namespace ast { namespace
             return 0; // $$$ for now $$$ error wrong arity
 
         if (ast.arguments.size() > 3)
-            return 0; // $$$ for now $$$ we support max arity of 4 only
+            return 0; // $$$ for now $$$ we support max arity of 3 only
 
         // Get the args
         double args[3];

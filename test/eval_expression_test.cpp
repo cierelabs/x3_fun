@@ -70,9 +70,9 @@ auto compare = [](fs::path input_path, fs::path expect_path)
 
 int main(int argc, char* argv[])
 {
-    if (argc < 1)
+    if (argc < 2)
     {
-       std::cout << "usage: " << argv[0] << " path/to/test/files" << std::endl;
+       std::cout << "usage: " << fs::path(argv[0]).filename() << " path/to/test/files" << std::endl;
        return -1;
     }
 
