@@ -22,11 +22,11 @@ namespace fun { namespace ast { namespace
         >
     fmap_type;
 
-    struct evaluator
+    struct interpreter_impl
     {
         typedef double result_type;
 
-        evaluator(fmap_type const& fmap, error_handler_type const& error_handler)
+        interpreter_impl(fmap_type const& fmap, error_handler_type const& error_handler)
             : fmap(fmap)
             , error_handler(error_handler)
         {}
@@ -42,12 +42,12 @@ namespace fun { namespace ast { namespace
         error_handler_type const& error_handler;
     };
 
-    double evaluator::operator()(double ast) const
+    double interpreter_impl::operator()(double ast) const
     {
         return ast;
     }
 
-    double evaluator::operator()(double lhs, ast::operation const& ast) const
+    double interpreter_impl::operator()(double lhs, ast::operation const& ast) const
     {
         double rhs = boost::apply_visitor(*this, ast.operand_);
         switch (ast.operator_)
@@ -59,12 +59,12 @@ namespace fun { namespace ast { namespace
 
             default:
                BOOST_ASSERT(0);
-               return 0;
+               return -1;
         }
     }
 
     // INTERPRETER_SIGNED_VISIT_BEGIN
-    double evaluator::operator()(ast::signed_ const& ast) const
+    double interpreter_impl::operator()(ast::signed_ const& ast) const
     {
         double r = boost::apply_visitor(*this, ast.operand_);
         switch (ast.sign)
@@ -74,12 +74,12 @@ namespace fun { namespace ast { namespace
 
             default:
                BOOST_ASSERT(0);
-               return 0;
+               return -1;
         }
     }
     // INTERPRETER_SIGNED_VISIT_END
 
-    double evaluator::operator()(ast::expression const& ast) const
+    double interpreter_impl::operator()(ast::expression const& ast) const
     {
         double r = boost::apply_visitor(*this, ast.first);
         for (auto const& oper : ast.rest)
@@ -87,25 +87,24 @@ namespace fun { namespace ast { namespace
          return r;
     }
 
-    double evaluator::operator()(ast::function_call const& ast) const
+    double interpreter_impl::operator()(ast::function_call const& ast) const
     {
         auto iter = fmap.find(ast.name);
 
         if (iter == fmap.end())
         {
             error_handler(ast, "Undefined function " + ast.name + '.');
-            return 0;
+            return -1;
         }
 
         if (iter->second.second != ast.arguments.size())
         {
             std::stringstream out;
-            out
-                << "Wrong number of arguments to function " << ast.name << " ("
+            out << "Wrong number of arguments to function " << ast.name << " ("
                 << iter->second.second << " expected)." << std::endl;
 
             error_handler(ast, out.str());
-            return 0;
+            return -1;
         }
 
         // Get the args
@@ -123,6 +122,6 @@ namespace fun { namespace ast
 {
     float interpreter::eval(ast::expression const& ast)
     {
-        return evaluator(fmap, error_handler)(ast);
+        return interpreter_impl(fmap, error_handler)(ast);
     }
 }}
