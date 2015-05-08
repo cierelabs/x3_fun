@@ -18,10 +18,13 @@ namespace fun { namespace parser
     using x3::alnum;
 
     struct identifier_class;
-    typedef x3::rule<identifier_class, std::string> identifier_type;
+    typedef
+        x3::rule<identifier_class, std::string>
+    identifier_type;
     identifier_type const identifier = "identifier";
 
-    auto const identifier_def = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
+    auto const identifier_def
+        = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
     BOOST_SPIRIT_DEFINE(identifier);
     // COMMON_VISIT_END
