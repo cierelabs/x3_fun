@@ -19,6 +19,7 @@ namespace fun { namespace ast
     ///////////////////////////////////////////////////////////////////////////
     namespace x3 = boost::spirit::x3;
 
+    // AST1_VISIT_BEGIN
     struct nil {};
     struct signed_;
     struct expression;
@@ -36,7 +37,9 @@ namespace fun { namespace ast
         using base_type::base_type;
         using base_type::operator=;
     };
+    // AST1_VISIT_END
 
+    // AST2_VISIT_BEGIN
     struct signed_
     {
         char sign;
@@ -60,6 +63,7 @@ namespace fun { namespace ast
         std::string name;
         std::list<expression> arguments;
     };
+    // AST2_VISIT_END
 
     // print functions for debugging
     inline std::ostream& operator<<(std::ostream& out, nil)
@@ -67,6 +71,8 @@ namespace fun { namespace ast
         out << "nil";
         return out;
     }
+
+    // AST_VISIT_END
 }}
 
 #endif

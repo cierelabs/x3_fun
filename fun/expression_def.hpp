@@ -45,6 +45,7 @@ namespace fun { namespace parser
     argument_list_type argument_list = "argument_list";
     function_call_type function_call = "function_call";
 
+    // EXPRESSION_DEF_VISIT_BEGIN
     auto const additive_expr_def =
         multiplicative_expr
         >> *(   (char_('+') > multiplicative_expr)
@@ -64,6 +65,7 @@ namespace fun { namespace parser
         |   (char_('-') > primary_expr)
         |   (char_('+') > primary_expr)
         ;
+    // EXPRESSION_DEF_VISIT_END
 
     auto argument_list_def = expression % ',';
 
@@ -80,6 +82,7 @@ namespace fun { namespace parser
 
     auto const expression_def = additive_expr;
 
+    // EXPRESSION_DEF_DEFINE_VISIT_BEGIN
     BOOST_SPIRIT_DEFINE(
         expression
       , additive_expr
@@ -89,6 +92,7 @@ namespace fun { namespace parser
       , argument_list
       , function_call
     );
+    // EXPRESSION_DEF_DEFINE_VISIT_END
 
     struct unary_expr_class : annotation_base {};
     struct primary_expr_class : annotation_base {};

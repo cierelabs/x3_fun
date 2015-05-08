@@ -10,6 +10,7 @@
 #include "ast.hpp"
 #include <boost/fusion/include/adapt_struct.hpp>
 
+// AST_ADAPTED_VISIT_BEGIN
 BOOST_FUSION_ADAPT_STRUCT(
     fun::ast::signed_,
     (char, sign)
@@ -33,5 +34,6 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::string, name)
     (std::list<fun::ast::expression>, arguments)
 )
+// AST_ADAPTED_VISIT_END
 
 #endif

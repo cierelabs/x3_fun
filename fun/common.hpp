@@ -11,6 +11,7 @@
 
 namespace fun { namespace parser
 {
+    // COMMON_VISIT_BEGIN
     using x3::raw;
     using x3::lexeme;
     using x3::alpha;
@@ -23,6 +24,7 @@ namespace fun { namespace parser
     auto const identifier_def = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
     BOOST_SPIRIT_DEFINE(identifier);
+    // COMMON_VISIT_END
 }}
 
 #endif
