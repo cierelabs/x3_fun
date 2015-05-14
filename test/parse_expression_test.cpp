@@ -15,9 +15,10 @@
 #include "../fun/config.hpp"
 #include "../fun/printer.hpp"
 
-#include "test.hpp"
+#include <boost/spirit/home/x3/support/utility/testing.hpp>
 
 namespace fs = boost::filesystem;
+namespace testing = boost::spirit::x3::testing;
 
 auto parse = [](std::string const& source, fs::path input_path)-> std::string
 {
@@ -60,7 +61,7 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
 
 auto compare = [](fs::path input_path, fs::path expect_path)
 {
-   test::compare(input_path, expect_path, parse);
+   testing::compare(input_path, expect_path, parse);
 };
 
 int main(int argc, char* argv[])
@@ -71,6 +72,5 @@ int main(int argc, char* argv[])
        return -1;
     }
 
-    test::for_each_file(fs::path(argv[1]), compare);
-    return 0;
+    return testing::for_each_file(fs::path(argv[1]), compare);
 }
