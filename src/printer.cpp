@@ -15,6 +15,7 @@ namespace fun { namespace ast { namespace
     ////////////////////////////////////////////////////////////////////////////
     //  The AST printer
     ////////////////////////////////////////////////////////////////////////////
+    // AST_PRINTER1_VISIT_BEGIN
     struct printer
     {
         typedef void result_type;
@@ -32,7 +33,9 @@ namespace fun { namespace ast { namespace
 
         std::ostream& out;
     };
+    // AST_PRINTER1_VISIT_END
 
+    // AST_PRINTER2_VISIT_BEGIN
     void printer::operator()(double ast) const
     {
         out << ast;
@@ -53,6 +56,7 @@ namespace fun { namespace ast { namespace
         }
         boost::apply_visitor(*this, ast.operand_);
     }
+    // AST_PRINTER2_VISIT_END
 
     void printer::operator()(ast::signed_ const& ast) const
     {
@@ -68,6 +72,7 @@ namespace fun { namespace ast { namespace
         boost::apply_visitor(*this, ast.operand_);
     }
 
+    // AST_PRINTER3_VISIT_BEGIN
     void printer::operator()(ast::expression const& ast) const
     {
         if (ast.rest.size())
@@ -78,7 +83,9 @@ namespace fun { namespace ast { namespace
         if (ast.rest.size())
             out << ')';
     }
+    // AST_PRINTER3_VISIT_END
 
+    // AST_PRINTER4_VISIT_BEGIN
     void printer::operator()(ast::function_call const& ast) const
     {
         out << ast.name;
@@ -96,6 +103,7 @@ namespace fun { namespace ast { namespace
         if (ast.arguments.size())
             out << ')';
     }
+    // AST_PRINTER4_VISIT_END
 }}}
 
 

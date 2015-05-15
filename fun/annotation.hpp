@@ -50,7 +50,7 @@ namespace fun { namespace parser
     // ANNOTATION2_VISIT_BEGIN
     template <typename Iterator, typename Context>
     inline void
-    on_success(Iterator const& first, Iterator const& last
+    annotation_base::on_success(Iterator const& first, Iterator const& last
       , ast::operand& ast, Context const& context)
     {
         auto& error_handler
@@ -69,7 +69,7 @@ namespace fun { namespace parser
     // ANNOTATION3_VISIT_BEGIN
     template <typename T, typename Iterator, typename Context>
     inline void
-    on_success(Iterator const& first, Iterator const& last
+    annotation_base::on_success(Iterator const& first, Iterator const& last
       , T& ast, Context const& context)
     {
         auto& error_handler = x3::get<error_handler_tag>(context).get();
