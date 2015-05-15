@@ -15,6 +15,7 @@
 
 namespace fun { namespace ast
 {
+    // INTERPRETER_CLASS_VISIT_BEGIN
     class interpreter
     {
     public:
@@ -24,12 +25,7 @@ namespace fun { namespace ast
         error_handler_type;
 
         template <typename ErrorHandler>
-        interpreter(ErrorHandler const& error_handler)
-            : error_handler(
-                [&](x3::position_tagged pos, std::string const& msg)
-                { error_handler(pos, msg); }
-            )
-        {}
+        interpreter(ErrorHandler const& error_handler);
 
         template <typename F>
         void add_function(std::string name, F f);
@@ -46,10 +42,19 @@ namespace fun { namespace ast
 
         error_handler_type error_handler;
     };
+    // INTERPRETER_CLASS_VISIT_END
 
     ///////////////////////////////////////////////////////////////////////////
     // Implementation
     ///////////////////////////////////////////////////////////////////////////
+    template <typename ErrorHandler>
+    inline interpreter::interpreter(ErrorHandler const& error_handler)
+        : error_handler(
+            [&](x3::position_tagged pos, std::string const& msg)
+            { error_handler(pos, msg); }
+        )
+    {}
+
     namespace detail
     {
         std::size_t const max_arity = 5;
@@ -108,6 +113,7 @@ namespace fun { namespace ast
         };
     }
 
+    // INTERPRETER_ADD_FUNCTION_VISIT_BEGIN
     template <typename F>
     inline void interpreter::add_function(std::string name, F f)
     {
@@ -117,6 +123,8 @@ namespace fun { namespace ast
         std::function<double(double* args)> f_adapter = detail::adapter_function<F>(f);
         fmap[name] = std::make_pair(f_adapter, detail::arity<F>::value);
     }
+    // INTERPRETER_ADD_FUNCTION_VISIT_END
+
 }}
 
 #endif

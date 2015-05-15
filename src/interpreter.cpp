@@ -47,6 +47,7 @@ namespace fun { namespace ast { namespace
         return ast;
     }
 
+    // INTERPRETER_OPERATION_VISIT_BEGIN
     double interpreter_impl::operator()(double lhs, ast::operation const& ast) const
     {
         double rhs = boost::apply_visitor(*this, ast.operand_);
@@ -62,6 +63,7 @@ namespace fun { namespace ast { namespace
                return -1;
         }
     }
+    // INTERPRETER_OPERATION_VISIT_END
 
     // INTERPRETER_SIGNED_VISIT_BEGIN
     double interpreter_impl::operator()(ast::signed_ const& ast) const
@@ -87,18 +89,16 @@ namespace fun { namespace ast { namespace
          return r;
     }
 
+    // INTERPRETER_FUNCTION_CALL_VISIT_BEGIN
     double interpreter_impl::operator()(ast::function_call const& ast) const
     {
         auto iter = fmap.find(ast.name);
-
-        if (iter == fmap.end())
-        {
+        if (iter == fmap.end()) {
             error_handler(ast, "Undefined function " + ast.name + '.');
             return -1;
         }
 
-        if (iter->second.second != ast.arguments.size())
-        {
+        if (iter->second.second != ast.arguments.size()) {
             std::stringstream out;
             out << "Wrong number of arguments to function " << ast.name << " ("
                 << iter->second.second << " expected)." << std::endl;
@@ -116,6 +116,7 @@ namespace fun { namespace ast { namespace
         // call user function
         return iter->second.first(args);
     }
+    // INTERPRETER_FUNCTION_CALL_VISIT_END
 }}}
 
 namespace fun { namespace ast
