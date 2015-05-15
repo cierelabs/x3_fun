@@ -41,12 +41,12 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
         // it later on in our on_error and on_sucess handlers
         with<fun::parser::error_handler_tag>(std::ref(error_handler))
         [
-            fun::expression()
+           fun::expression()
         ];
 
     // Go forth and parse!
     using boost::spirit::x3::ascii::space;
-    bool success = phrase_parse(iter, end, parser, space, ast);
+    bool success = x3::phrase_parse(iter, end, parser, space, ast);
 
     if (success)
     {
