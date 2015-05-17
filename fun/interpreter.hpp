@@ -9,6 +9,7 @@
 
 #include <map>
 #include <functional>
+#include <utility>
 #include <boost/mpl/int.hpp>
 #include "ast.hpp"
 #include "error_handler.hpp"
@@ -74,39 +75,15 @@ namespace fun { namespace ast
             adapter_function(F f)
                 : f(f) {}
 
-            double dispatch(double* args, boost::mpl::int_<0>) const
+            template <std::size_t... I>
+            double dispatch(double* args, std::index_sequence<I...>) const
             {
-                return f();
-            }
-
-            double dispatch(double* args, boost::mpl::int_<1>) const
-            {
-                return f(args[0]);
-            }
-
-            double dispatch(double* args, boost::mpl::int_<2>) const
-            {
-                return f(args[0], args[1]);
-            }
-
-            double dispatch(double* args, boost::mpl::int_<3>) const
-            {
-                return f(args[0], args[1], args[2]);
-            }
-
-            double dispatch(double* args, boost::mpl::int_<4>) const
-            {
-                return f(args[0], args[1], args[2], args[3]);
-            }
-
-            double dispatch(double* args, boost::mpl::int_<5>) const
-            {
-                return f(args[0], args[1], args[2], args[3], args[4]);
+                return f(args[I]...);
             }
 
             double operator()(double* args) const
             {
-                return dispatch(args, boost::mpl::int_<detail::arity<F>::value>());
+                return dispatch(args, std::make_index_sequence<detail::arity<F>::value>());
             }
 
             F f;
