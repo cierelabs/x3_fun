@@ -8,12 +8,12 @@
 #define BOOST_SPIRIT_X3_FUN_EXPRESSION_DEF_HPP
 
 #include <boost/spirit/home/x3.hpp>
+#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 #include "ast.hpp"
 #include "ast_adapted.hpp"
 #include "expression.hpp"
 #include "common.hpp"
 #include "error_handler.hpp"
-#include "annotation.hpp"
 
 namespace fun { namespace parser
 {
@@ -132,12 +132,11 @@ namespace fun { namespace parser
     // EXPRESSION_DEF6_VISIT_END
 
     // EXPRESSION_DEF7_VISIT_BEGIN
-    struct unary_expr_class : annotation_base {};
-    struct primary_expr_class : annotation_base {};
-    struct function_call_class : annotation_base {};
+    struct unary_expr_class : x3::annotate_on_success {};
+    struct primary_expr_class : x3::annotate_on_success {};
+    struct function_call_class : x3::annotate_on_success {};
 
-    struct expression_class :
-        annotation_base, error_handler_base {};
+    struct expression_class : x3::annotate_on_success, error_handler_base {};
     // EXPRESSION_DEF7_VISIT_END
 }}
 
