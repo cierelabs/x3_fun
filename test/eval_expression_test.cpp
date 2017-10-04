@@ -62,10 +62,12 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
     if (success)
     {
         if (iter != end)
-            return "Error! Expecting end of input here: " + std::string(iter, end) + '\n';
-        double result = interp.eval(ast);
-        if (out.str().empty())
-            out << result << std::endl;
+            error_handler( iter, "Error! Expecting end of input here:" );
+        else {
+            double result = interp.eval(ast);
+            if (out.str().empty())
+                out << result << std::endl;
+        }
     }
 
     return out.str();

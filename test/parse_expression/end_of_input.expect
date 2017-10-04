@@ -1,0 +1,4 @@
+In file <%.*?end_of_input.input%>, line 2:
+Error! Expecting end of input here:
+4 + 5
+^_

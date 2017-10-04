@@ -1,1 +1,4 @@
-Error! Expecting end of input here: $ * bar
+In file <%.*?bad_identifier.input%>, line 1:
+Error! Expecting end of input here:
+123 + foo$ * bar
+_________^_
