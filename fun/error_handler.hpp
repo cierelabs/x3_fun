@@ -47,13 +47,15 @@ namespace fun { namespace parser
 
     // ERROR_HANDLER2_VISIT_BEGIN
     inline error_handler_base::error_handler_base()
+      : id_map{
+            { "expression", "Expression" },
+            { "additive_expr", "Expression" },
+            { "multiplicative_expr", "Expression" },
+            { "unary_expr", "Expression" },
+            { "primary_expr", "Expression" },
+            { "argument_list", "Argument List" }
+        }
     {
-        id_map["expression"] = "Expression";
-        id_map["additive_expr"] = "Expression";
-        id_map["multiplicative_expr"] = "Expression";
-        id_map["unary_expr"] = "Expression";
-        id_map["primary_expr"] = "Expression";
-        id_map["argument_list"] = "Argument List";
     }
     // ERROR_HANDLER2_VISIT_END
 
