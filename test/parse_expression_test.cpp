@@ -53,8 +53,9 @@ auto parse = [](std::string const& source, fs::path input_path)-> std::string
     if (success)
     {
         if (iter != end)
-            return "Error! Expecting end of input here: " + std::string(iter, end) + '\n';
-        fun::ast::print(out, ast);
+            error_handler( iter, "Error! Expecting end of input here:" );
+        else
+            fun::ast::print(out, ast);
     }
 
     return out.str();
